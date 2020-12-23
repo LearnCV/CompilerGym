@@ -55,7 +55,7 @@ py_test(
     name = "custom_benchmarks_test",
     srcs = ["custom_benchmarks_test.py"],
     data = [
-        "//compiler_gym/third_party/cBench",
+        "//compiler_gym/third_party/cBench:crc32",
     ],
     deps = [
         ":fixtures",
@@ -75,6 +75,7 @@ py_library(
         "//compiler_gym/envs/llvm/service/passes:actions_genfiles",
         "//compiler_gym/third_party/cBench:benchmarks_list",
     ],
+    visibility = ["//visibility:public"],
     deps = [
         "//compiler_gym",
         "//compiler_gym/envs",
@@ -86,6 +87,7 @@ py_library(
 py_test(
     name = "fresh_environment_observation_reward_test",
     srcs = ["fresh_environment_observation_reward_test.py"],
+    shard_count = 4,
     deps = [
         ":fixtures",
         "//compiler_gym/envs",

@@ -44,6 +44,8 @@ Install the latest CompilerGym release using:
 
     $ pip install compiler_gym
 
+The binary works on MacOS and Linux (on Ubuntu 18.04, Fedora 28, Debian 10 or newer equivalents)
+
 ### Building from Source
 
 If you prefer, you may build from source. This requires a modern C++ toolchain.
