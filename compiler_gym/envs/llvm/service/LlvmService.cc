@@ -7,6 +7,7 @@
 #include <glog/logging.h>
 
 #include <optional>
+#include <sstream>
 
 #include "compiler_gym/envs/llvm/service/ActionSpace.h"
 #include "compiler_gym/envs/llvm/service/ObservationSpaces.h"
@@ -14,6 +15,9 @@
 #include "compiler_gym/service/proto/compiler_gym_service.pb.h"
 #include "compiler_gym/util/EnumUtil.h"
 #include "compiler_gym/util/GrpcStatusMacros.h"
+#include "compiler_gym/util/Version.h"
+#include "llvm/ADT/Triple.h"
+#include "llvm/Config/llvm-config.h"
 
 namespace compiler_gym::llvm_service {
 
@@ -24,6 +28,16 @@ namespace fs = boost::filesystem;
 
 LlvmService::LlvmService(const fs::path& workingDirectory)
     : workingDirectory_(workingDirectory), benchmarkFactory_(workingDirectory), nextSessionId_(0) {}
+
+Status LlvmService::GetVersion(ServerContext* /* unused */, const GetVersionRequest* /* unused */,
+                               GetVersionReply* reply) {
+  VLOG(2) << "GetSpaces()";
+  reply->set_service_version(COMPILER_GYM_VERSION);
+  std::stringstream ss;
+  ss << LLVM_VERSION_STRING << " " << llvm::Triple::normalize(LLVM_DEFAULT_TARGET_TRIPLE);
+  reply->set_compiler_version(ss.str());
+  return Status::OK;
+}
 
 Status LlvmService::GetSpaces(ServerContext* /* unused */, const GetSpacesRequest* /* unused */,
                               GetSpacesReply* reply) {

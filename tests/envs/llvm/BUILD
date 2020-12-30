@@ -111,8 +111,7 @@ py_test(
     srcs = ["llvm_env_test.py"],
     deps = [
         ":fixtures",
-        "//compiler_gym/envs",
-        "//compiler_gym/spaces",
+        "//compiler_gym",
         "//tests:test_main",
     ],
 )
@@ -124,6 +123,26 @@ py_test(
     deps = [
         ":fixtures",
         "//compiler_gym",
+        "//tests:test_main",
+    ],
+)
+
+py_test(
+    name = "observation_spaces_test",
+    srcs = ["observation_spaces_test.py"],
+    deps = [
+        ":fixtures",
+        "//compiler_gym/envs",
+        "//tests:test_main",
+    ],
+)
+
+py_test(
+    name = "reward_spaces_test",
+    srcs = ["reward_spaces_test.py"],
+    deps = [
+        ":fixtures",
+        "//compiler_gym/envs",
         "//tests:test_main",
     ],
 )

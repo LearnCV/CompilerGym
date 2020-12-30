@@ -1,4 +1,4 @@
-![](docs/source/_static/img/logo.png)
+![CompilerGym](https://github.com/facebookresearch/CompilerGym/raw/development/docs/source/_static/img/logo.png)
 
 ---
 
@@ -44,7 +44,8 @@ Install the latest CompilerGym release using:
 
     $ pip install compiler_gym
 
-The binary works on MacOS and Linux (on Ubuntu 18.04, Fedora 28, Debian 10 or newer equivalents)
+The binary works on macOS and Linux (on Ubuntu 18.04, Fedora 28, Debian 10 or
+newer equivalents).
 
 ### Building from Source
 
@@ -110,7 +111,7 @@ tutorials, further details, and API reference.
 # Contributing
 
 We welcome contributions to CompilerGym. If you are interested in contributing please see
-[this document](CONTRIBUTING.md).
+[this document](https://github.com/facebookresearch/CompilerGym/blob/development/CONTRIBUTING.md).
 
 
 # Citation

@@ -300,30 +300,56 @@ Status LlvmEnvironment::getObservation(LlvmObservationSpace space, Observation* 
       reply->mutable_int64_list()->add_value(static_cast<int64_t>(cost));
       break;
     }
-    case LlvmObservationSpace::NATIVE_TEXT_SIZE_BYTES: {
-      const auto cost = getCost(LlvmCostFunction::NATIVE_TEXT_SIZE_BYTES, benchmark().module(),
+    case LlvmObservationSpace::OBJECT_TEXT_SIZE_BYTES: {
+      const auto cost = getCost(LlvmCostFunction::OBJECT_TEXT_SIZE_BYTES, benchmark().module(),
                                 workingDirectory_);
       reply->mutable_int64_list()->add_value(static_cast<int64_t>(cost));
       break;
     }
-    case LlvmObservationSpace::NATIVE_TEXT_SIZE_BYTES_O0: {
+    case LlvmObservationSpace::OBJECT_TEXT_SIZE_O0: {
       const auto cost = getBaselineCost(benchmark().baselineCosts(), LlvmBaselinePolicy::O0,
-                                        LlvmCostFunction::NATIVE_TEXT_SIZE_BYTES);
+                                        LlvmCostFunction::OBJECT_TEXT_SIZE_BYTES);
       reply->mutable_int64_list()->add_value(static_cast<int64_t>(cost));
       break;
     }
-    case LlvmObservationSpace::NATIVE_TEXT_SIZE_BYTES_O3: {
+    case LlvmObservationSpace::OBJECT_TEXT_SIZE_O3: {
       const auto cost = getBaselineCost(benchmark().baselineCosts(), LlvmBaselinePolicy::O3,
-                                        LlvmCostFunction::NATIVE_TEXT_SIZE_BYTES);
+                                        LlvmCostFunction::OBJECT_TEXT_SIZE_BYTES);
       reply->mutable_int64_list()->add_value(static_cast<int64_t>(cost));
       break;
     }
-    case LlvmObservationSpace::NATIVE_TEXT_SIZE_BYTES_OZ: {
+    case LlvmObservationSpace::OBJECT_TEXT_SIZE_OZ: {
       const auto cost = getBaselineCost(benchmark().baselineCosts(), LlvmBaselinePolicy::Oz,
-                                        LlvmCostFunction::NATIVE_TEXT_SIZE_BYTES);
+                                        LlvmCostFunction::OBJECT_TEXT_SIZE_BYTES);
       reply->mutable_int64_list()->add_value(static_cast<int64_t>(cost));
       break;
     }
+#ifdef COMPILER_GYM_EXPERIMENTAL_TEXT_SIZE_COST
+    case LlvmObservationSpace::TEXT_SIZE_BYTES: {
+      const auto cost =
+          getCost(LlvmCostFunction::TEXT_SIZE_BYTES, benchmark().module(), workingDirectory_);
+      reply->mutable_int64_list()->add_value(static_cast<int64_t>(cost));
+      break;
+    }
+    case LlvmObservationSpace::TEXT_SIZE_O0: {
+      const auto cost = getBaselineCost(benchmark().baselineCosts(), LlvmBaselinePolicy::O0,
+                                        LlvmCostFunction::TEXT_SIZE_BYTES);
+      reply->mutable_int64_list()->add_value(static_cast<int64_t>(cost));
+      break;
+    }
+    case LlvmObservationSpace::TEXT_SIZE_O3: {
+      const auto cost = getBaselineCost(benchmark().baselineCosts(), LlvmBaselinePolicy::O3,
+                                        LlvmCostFunction::TEXT_SIZE_BYTES);
+      reply->mutable_int64_list()->add_value(static_cast<int64_t>(cost));
+      break;
+    }
+    case LlvmObservationSpace::TEXT_SIZE_OZ: {
+      const auto cost = getBaselineCost(benchmark().baselineCosts(), LlvmBaselinePolicy::Oz,
+                                        LlvmCostFunction::TEXT_SIZE_BYTES);
+      reply->mutable_int64_list()->add_value(static_cast<int64_t>(cost));
+      break;
+    }
+#endif
   }
 
   return Status::OK;
@@ -344,8 +370,9 @@ Status LlvmEnvironment::getReward(LlvmRewardSpace space, Reward* reply) {
   // Compute a new cost.
   const double currentCost = getCost(cost, benchmark().module(), workingDirectory_);
 
-  // Derive the reward from the costs.
+  // Reward is reduction in cost ...
   double reward = previousCost - currentCost;
+  // ... scaled to the reduction in cost achieved by a baseline policy
   if (baselinePolicy != LlvmBaselinePolicy::O0) {
     reward /= unoptimizedCost - baselineCost;
   }
